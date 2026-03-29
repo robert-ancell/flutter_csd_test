@@ -1,7 +1,28 @@
 import 'package:flutter/material.dart';
+import "package:flutter/src/widgets/_window.dart";
 
 void main() {
-  runApp(const MyApp());
+  runWidget(const Window());
+}
+
+class Window extends StatefulWidget {
+  const Window({super.key});
+
+  @override
+  State<Window> createState() => _WindowState();
+}
+
+class _WindowState extends State<Window> {
+  RegularWindowController controller = RegularWindowController(
+    preferredSize: Size(400, 400),
+  );
+
+  @override
+  Widget build(BuildContext context) {
+    return ViewCollection(
+      views: [RegularWindow(controller: controller, child: const MyApp())],
+    );
+  }
 }
 
 class MyApp extends StatelessWidget {
