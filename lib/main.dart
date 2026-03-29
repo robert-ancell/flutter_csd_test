@@ -15,6 +15,7 @@ class Window extends StatefulWidget {
 class _WindowState extends State<Window> {
   RegularWindowController controller = RegularWindowController(
     preferredSize: Size(400, 400),
+    decorated: false,
   );
 
   @override
