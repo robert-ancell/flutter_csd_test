@@ -21,7 +21,12 @@ class _WindowState extends State<Window> {
   @override
   Widget build(BuildContext context) {
     return ViewCollection(
-      views: [RegularWindow(controller: controller, child: const MyApp())],
+      views: [
+        RegularWindow(
+          controller: controller,
+          child: const WindowDecorations(child: const MyApp()),
+        ),
+      ],
     );
   }
 }
@@ -36,6 +41,17 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(colorScheme: .fromSeed(seedColor: Colors.deepPurple)),
       home: const MyHomePage(title: 'Flutter Demo Home Page'),
     );
+  }
+}
+
+class WindowDecorations extends StatelessWidget {
+  final Widget child;
+
+  const WindowDecorations({super.key, required this.child});
+
+  @override
+  Widget build(BuildContext context) {
+    return child;
   }
 }
 
