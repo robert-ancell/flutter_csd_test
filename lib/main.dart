@@ -25,7 +25,12 @@ class _WindowState extends State<Window> {
       views: [
         RegularWindow(
           controller: controller,
-          child: const WindowDecorations(child: const MyApp()),
+          child: WindowDecorations(
+            onClose: () {
+              controller.destroy();
+            },
+            child: const MyApp(),
+          ),
         ),
       ],
     );
@@ -47,8 +52,13 @@ class MyApp extends StatelessWidget {
 
 class WindowDecorations extends StatelessWidget {
   final Widget child;
+  final void Function() onClose;
 
-  const WindowDecorations({super.key, required this.child});
+  const WindowDecorations({
+    super.key,
+    required this.child,
+    required this.onClose,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -57,12 +67,7 @@ class WindowDecorations extends StatelessWidget {
         textDirection: TextDirection.ltr,
         child: Column(
           children: <Widget>[
-            TitleBar(
-              title: "Flutter Window",
-              onClose: () {
-                return;
-              },
-            ),
+            TitleBar(title: "Flutter Window", onClose: onClose),
             Expanded(child: child),
           ],
         ),
@@ -73,7 +78,7 @@ class WindowDecorations extends StatelessWidget {
 
 class TitleBar extends StatelessWidget {
   final String title;
-  final void Function()? onClose;
+  final void Function() onClose;
 
   const TitleBar({super.key, required this.title, required this.onClose});
 
@@ -107,7 +112,7 @@ class WindowTitle extends StatelessWidget {
 }
 
 class WindowCloseButton extends StatelessWidget {
-  final void Function()? onClose;
+  final void Function() onClose;
 
   const WindowCloseButton({super.key, required this.onClose});
 
