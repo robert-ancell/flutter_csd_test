@@ -52,7 +52,76 @@ class WindowDecorations extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return WindowShadows(child: child);
+    return WindowShadows(
+      child: Directionality(
+        textDirection: TextDirection.ltr,
+        child: Column(
+          children: <Widget>[
+            TitleBar(
+              title: "Flutter Window",
+              onClose: () {
+                return;
+              },
+            ),
+            Expanded(child: child),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class TitleBar extends StatelessWidget {
+  final String title;
+  final void Function()? onClose;
+
+  const TitleBar({super.key, required this.title, required this.onClose});
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: 40,
+      child: Container(
+        color: Colors.blueGrey,
+        padding: const EdgeInsets.all(4),
+        child: Row(
+          children: <Widget>[
+            Expanded(child: WindowTitle(title: title)),
+            WindowCloseButton(onClose: onClose),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class WindowTitle extends StatelessWidget {
+  final String title;
+
+  const WindowTitle({super.key, required this.title});
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(title, textAlign: TextAlign.center);
+  }
+}
+
+class WindowCloseButton extends StatelessWidget {
+  final void Function()? onClose;
+
+  const WindowCloseButton({super.key, required this.onClose});
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: 40,
+      height: 40,
+      child: TextButton(
+        onPressed: onClose,
+        style: TextButton.styleFrom(foregroundColor: Colors.white),
+        child: const Icon(Icons.close, size: 16),
+      ),
+    );
   }
 }
 
