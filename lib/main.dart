@@ -16,6 +16,7 @@ class _WindowState extends State<Window> {
   RegularWindowController controller = RegularWindowController(
     preferredSize: Size(400, 400),
     decorated: false,
+    backgroundColor: Colors.transparent,
   );
 
   @override
@@ -51,7 +52,37 @@ class WindowDecorations extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return child;
+    return WindowShadows(child: child);
+  }
+}
+
+class WindowShadows extends StatelessWidget {
+  final Widget child;
+  final double borderWidth;
+
+  const WindowShadows({super.key, required this.child, this.borderWidth = 6});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(borderWidth),
+        border: Border.all(width: borderWidth, color: Colors.transparent),
+      ),
+      child: Container(
+        decoration: BoxDecoration(
+          border: Border.all(width: borderWidth, color: Colors.transparent),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black,
+              blurRadius: borderWidth,
+              spreadRadius: -borderWidth * 0.5,
+            ),
+          ],
+        ),
+        child: child,
+      ),
+    );
   }
 }
 
