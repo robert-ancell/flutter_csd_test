@@ -2,28 +2,27 @@ import 'package:flutter/material.dart';
 import "package:flutter/src/widgets/_window.dart";
 
 void main() {
-  runWidget(const Window());
+  runWidget(const MyWindow());
 }
 
-class Window extends StatefulWidget {
-  const Window({super.key});
+class MyWindow extends StatefulWidget {
+  const MyWindow({super.key});
 
   @override
-  State<Window> createState() => _WindowState();
+  State<MyWindow> createState() => _WindowState();
 }
 
-class _WindowState extends State<Window> {
-  RegularWindowController controller = RegularWindowController(
-    preferredSize: Size(400, 400),
-    decorated: false,
-    backgroundColor: Colors.transparent,
+class _WindowState extends State<MyWindow> {
+  WindowController controller = WindowController(
+    size: Size(400, 400),
+    //backgroundColor: Colors.transparent,
   );
 
   @override
   Widget build(BuildContext context) {
     return ViewCollection(
       views: [
-        RegularWindow(
+        Window(
           controller: controller,
           child: WindowDecorations(
             onClose: () {
