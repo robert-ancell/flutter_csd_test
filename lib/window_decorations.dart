@@ -362,17 +362,44 @@ class WindowControlButton extends StatefulWidget {
 }
 
 class _WindowControlButtonState extends State<WindowControlButton> {
+  /// The size of a window button, as GTK3 Adwaita sizes the ones in the title
+  /// bar it draws for a window without a header bar.
+  ///
+  /// The theme gives "button.titlebutton" a minimum size of 26 pixels and a one
+  /// pixel border, which fills the height of the title bar exactly.
+  static const double _size = 26 + 1 + 1;
+
   bool _hovered = false;
   bool _pressed = false;
 
+  /// How a window button is drawn when it is pressed, hovered, or neither.
+  ///
+  /// GTK draws nothing at all until the pointer is over the button, and then a
+  /// circle the shape of the whole button.
+  BoxDecoration? get _decoration {
+    if (_pressed) {
+      return const BoxDecoration(
+        shape: BoxShape.circle,
+        color: Color(0xFFD6D1CD),
+        border: Border.fromBorderSide(BorderSide(color: Color(0xFFCDC7C2))),
+      );
+    }
+    if (_hovered) {
+      return const BoxDecoration(
+        shape: BoxShape.circle,
+        gradient: LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: <Color>[Color(0xFFFDFDFC), Color(0xFFF4F3F2)],
+        ),
+        border: Border.fromBorderSide(BorderSide(color: Color(0xFFCDC7C2))),
+      );
+    }
+    return null;
+  }
+
   @override
   Widget build(BuildContext context) {
-    final double backgroundOpacity = _pressed
-        ? 0.22
-        : _hovered
-        ? 0.14
-        : 0.06;
-
     return Semantics(
       label: widget.tooltip,
       button: true,
@@ -399,12 +426,9 @@ class _WindowControlButtonState extends State<WindowControlButton> {
             widget.onPressed();
           },
           child: Container(
-            width: 26,
-            height: 26,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              color: Colors.black.withValues(alpha: backgroundOpacity),
-            ),
+            width: _size,
+            height: _size,
+            decoration: _decoration,
             child: Icon(
               widget.icon,
               size: widget.iconSize,
