@@ -144,6 +144,14 @@ class TitleBar extends StatefulWidget {
 }
 
 class _TitleBarState extends State<TitleBar> {
+  /// The height of a title bar, as GTK3 Adwaita sizes the one it draws for a
+  /// window that has no header bar.
+  ///
+  /// That title bar is a "headerbar.titlebar.default-decoration" node, which
+  /// the theme gives a minimum height of 28 pixels, 4 pixels of padding and a
+  /// one pixel bottom border.
+  static const double _height = 28 + 4 + 4 + 1;
+
   // The distance the pointer has to move before a press becomes a window
   // move, matching the GTK drag threshold.
   static const double _dragThreshold = 8;
@@ -211,7 +219,7 @@ class _TitleBarState extends State<TitleBar> {
     _isActivated = isActivated;
 
     return Container(
-      height: 46,
+      height: _height,
       decoration: BoxDecoration(
         gradient: isActivated
             ? const LinearGradient(
@@ -229,7 +237,13 @@ class _TitleBarState extends State<TitleBar> {
           ),
         ),
       ),
-      padding: const EdgeInsets.symmetric(horizontal: 6),
+      // The highlight along the top of the title bar. GTK draws it as an inset
+      // shadow, which takes up no space, so it goes in front of the contents
+      // rather than in the border.
+      foregroundDecoration: const BoxDecoration(
+        border: Border(top: BorderSide(color: Color(0xCCFFFFFF))),
+      ),
+      padding: const EdgeInsets.all(4),
       child: Stack(
         children: <Widget>[
           // The draggable area sits below the window controls so that
@@ -298,9 +312,10 @@ class WindowControls extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // GTK gives the title bar it draws for a window without a header bar a
+    // spacing of zero, so its buttons sit right next to each other.
     return Row(
       mainAxisSize: MainAxisSize.min,
-      spacing: 6,
       children: <Widget>[
         WindowControlButton(
           icon: Icons.remove,
