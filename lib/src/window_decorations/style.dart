@@ -28,7 +28,14 @@ enum WindowEdge {
 /// tested without a window at all.
 @immutable
 class WindowDecorationDetails {
+  /// The title of the window, as the window system has it.
+  ///
+  /// This is read back from the window rather than taken from whatever the app
+  /// last asked for, so the title drawn here is the same one the window manager
+  /// shows in its task list and window switcher. It follows the window, so a
+  /// title set after the window is up redraws the title bar.
   final String title;
+
   final bool isActivated;
   final bool isMaximized;
 
