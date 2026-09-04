@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import "package:flutter/src/widgets/_window.dart";
 
+import 'window_decorations.dart';
+
 void main() {
   runWidget(const MyWindow());
 }
@@ -15,7 +17,7 @@ class MyWindow extends StatefulWidget {
 class _WindowState extends State<MyWindow> {
   WindowController controller = WindowController(
     size: Size(400, 400),
-    //backgroundColor: Colors.transparent,
+    title: 'Flutter Window',
   );
 
   @override
@@ -24,12 +26,7 @@ class _WindowState extends State<MyWindow> {
       views: [
         Window(
           controller: controller,
-          child: WindowDecorations(
-            onClose: () {
-              controller.destroy();
-            },
-            child: const MyApp(),
-          ),
+          child: const WindowDecorations(child: MyApp()),
         ),
       ],
     );
@@ -45,116 +42,6 @@ class MyApp extends StatelessWidget {
       title: 'Flutter Demo',
       theme: ThemeData(colorScheme: .fromSeed(seedColor: Colors.deepPurple)),
       home: const MyHomePage(title: 'Flutter Demo Home Page'),
-    );
-  }
-}
-
-class WindowDecorations extends StatelessWidget {
-  final Widget child;
-  final void Function() onClose;
-
-  const WindowDecorations({
-    super.key,
-    required this.child,
-    required this.onClose,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return WindowShadows(
-      child: Directionality(
-        textDirection: TextDirection.ltr,
-        child: Column(
-          children: <Widget>[
-            TitleBar(title: "Flutter Window", onClose: onClose),
-            Expanded(child: child),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class TitleBar extends StatelessWidget {
-  final String title;
-  final void Function() onClose;
-
-  const TitleBar({super.key, required this.title, required this.onClose});
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      height: 40,
-      child: Container(
-        color: Colors.blueGrey,
-        padding: const EdgeInsets.all(4),
-        child: Row(
-          children: <Widget>[
-            Expanded(child: WindowTitle(title: title)),
-            WindowCloseButton(onClose: onClose),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class WindowTitle extends StatelessWidget {
-  final String title;
-
-  const WindowTitle({super.key, required this.title});
-
-  @override
-  Widget build(BuildContext context) {
-    return Text(title, textAlign: TextAlign.center);
-  }
-}
-
-class WindowCloseButton extends StatelessWidget {
-  final void Function() onClose;
-
-  const WindowCloseButton({super.key, required this.onClose});
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      width: 40,
-      height: 40,
-      child: TextButton(
-        onPressed: onClose,
-        style: TextButton.styleFrom(foregroundColor: Colors.white),
-        child: const Icon(Icons.close, size: 16),
-      ),
-    );
-  }
-}
-
-class WindowShadows extends StatelessWidget {
-  final Widget child;
-  final double borderWidth;
-
-  const WindowShadows({super.key, required this.child, this.borderWidth = 6});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(borderWidth),
-        border: Border.all(width: borderWidth, color: Colors.transparent),
-      ),
-      child: Container(
-        decoration: BoxDecoration(
-          border: Border.all(width: borderWidth, color: Colors.transparent),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black,
-              blurRadius: borderWidth,
-              spreadRadius: -borderWidth * 0.5,
-            ),
-          ],
-        ),
-        child: child,
-      ),
     );
   }
 }
