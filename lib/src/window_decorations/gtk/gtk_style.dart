@@ -53,9 +53,15 @@ class GtkWindowDecorationStyle extends WindowDecorationStyle {
   @override
   void prepareWindow(BaseWindowController controller) {
     // The decorations replace the ones GTK would draw, and the window has to be
-    // transparent for the shadow around it to show through.
+    // transparent for the rounded corners and the shadow around them to show
+    // what is behind the window.
+    //
+    // Painting the background ourselves stops GTK filling the window with the
+    // background color of the current theme, which is opaque. What we then
+    // leave unpainted is the transparent color below.
     (controller as WindowControllerLinux)
       ..setDecorated(false)
+      ..setAppPaintable(true)
       ..setBackgroundColor(const Color(0x00000000));
   }
 }
