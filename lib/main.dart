@@ -1,9 +1,25 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import "package:flutter/src/widgets/_window.dart";
 
 import 'window_decorations.dart';
 
+/// Quits the application once the only window has gone away.
+///
+/// Destroying a window doesn't end the process by itself, so without this the
+/// app keeps running in the background after its last window is closed.
+class MainWindowDelegate with WindowControllerDelegate {
+  @override
+  void onWindowDestroyed() {
+    super.onWindowDestroyed();
+    ServicesBinding.instance.exitApplication(AppExitType.required);
+  }
+}
+
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
   runWidget(const MyWindow());
 }
 
@@ -18,6 +34,7 @@ class _WindowState extends State<MyWindow> {
   WindowController controller = WindowController(
     size: Size(400, 400),
     title: 'Flutter Window',
+    delegate: MainWindowDelegate(),
   );
 
   @override
