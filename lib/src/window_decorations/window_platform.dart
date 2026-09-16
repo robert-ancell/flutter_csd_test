@@ -34,7 +34,7 @@ abstract class WindowPlatform {
   /// rounded corners and its drop shadow.
   ///
   /// These go together because a window system either hands over the whole
-  /// window or only its title bar. Windows takes away the title bar alone, so
+  /// window or only its title bar. Windows hands over the title bar alone, so
   /// an app there draws nothing but a title bar of its own, and drawing any of
   /// the rest would double up on a frame that is still there. GTK takes away
   /// the whole frame, so an app there has to draw all of it.
@@ -111,9 +111,11 @@ class _Win32WindowPlatform extends WindowPlatform {
 
   const _Win32WindowPlatform(this.controller);
 
-  /// Windows only takes the title bar away. The rest of the frame stays, drawn
-  /// outside the client area, so the window can still be resized by its
-  /// border, snapped to the screen edges and restored from the taskbar.
+  /// Windows keeps every part of the frame and hands over only the strip the
+  /// title bar sits in, by letting the client area extend up over it. The
+  /// border, shadow and rounded corners are still drawn outside the client
+  /// area, so the window can still be resized by its border, snapped to the
+  /// screen edges and restored from the taskbar without the app doing anything.
   @override
   bool get drawsFrame => true;
 

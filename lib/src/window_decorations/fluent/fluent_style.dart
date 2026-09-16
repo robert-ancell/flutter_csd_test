@@ -7,8 +7,8 @@ import 'fluent_title_bar.dart';
 /// Windows drawn in the style of Windows 11.
 ///
 /// The shadow and rounded corners here are only drawn where the window system
-/// has given the whole window up, which Windows itself never does: it takes
-/// away its title bar and goes on drawing the frame around the client area.
+/// has given the whole window up, which Windows itself never does: it keeps
+/// its frame and lets the client area extend up over the title bar instead.
 /// They are what the desktop window manager would draw, so that this style
 /// looks the same on a desktop that hands over the whole window.
 ///

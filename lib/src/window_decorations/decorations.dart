@@ -115,8 +115,9 @@ class _WindowDecorationsState extends State<WindowDecorations> {
       ],
     );
 
-    // Where the window system goes on drawing the frame it only gave up its
-    // title bar, so the title bar is the whole of the decorations. Everywhere
+    // Where the window system goes on drawing the frame it has given up only
+    // the strip its title bar sat in, so the title bar is the whole of the
+    // decorations. Everywhere
     // else the app draws the window itself, borders, corners, shadow and all.
     if (!platform.drawsFrame) {
       decorated = ClipRRect(
