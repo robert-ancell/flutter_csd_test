@@ -30,12 +30,16 @@ abstract class WindowPlatform {
   }
 
   /// Whether the window system goes on drawing the frame around a window whose
-  /// decorations it has given up, i.e. its border, drop shadow and rounded
-  /// corners.
+  /// decorations it has given up: its border, the border's resize handles, its
+  /// rounded corners and its drop shadow.
   ///
-  /// Windows only ever takes away its title bar, so an app there draws nothing
-  /// but a title bar of its own. GTK takes away the whole frame, so an app
-  /// there has to draw all of it.
+  /// These go together because a window system either hands over the whole
+  /// window or only its title bar. Windows takes away the title bar alone, so
+  /// an app there draws nothing but a title bar of its own, and drawing any of
+  /// the rest would double up on a frame that is still there. GTK takes away
+  /// the whole frame, so an app there has to draw all of it.
+  ///
+  /// The title bar is not part of this: the app always draws that one.
   bool get drawsFrame;
 
   /// Sets whether the window system draws the decorations of this window,
