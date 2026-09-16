@@ -18,6 +18,10 @@
 /// [WindowDecorations], or put a [WindowDecorationTheme] above it. No style
 /// asks anything of the window it is drawn around, so the decorations of every
 /// desktop can be looked at on any one of them.
+///
+/// Turning [WindowDecorations.clientSide] off hands the window back to the
+/// window system, which is how these decorations can be compared against the
+/// ones they are imitating.
 library;
 
 export 'src/window_decorations/aqua/aqua_style.dart';

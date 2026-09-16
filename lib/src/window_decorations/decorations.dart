@@ -20,7 +20,18 @@ class WindowDecorations extends StatefulWidget {
   final Widget child;
   final WindowDecorationStyle? style;
 
-  const WindowDecorations({super.key, required this.child, this.style});
+  /// Whether the app draws the decorations, rather than the window system.
+  ///
+  /// Turning this off leaves the window looking the way the window system
+  /// would draw it, which is what the decorations drawn here are imitating.
+  final bool clientSide;
+
+  const WindowDecorations({
+    super.key,
+    required this.child,
+    this.style,
+    this.clientSide = true,
+  });
 
   @override
   State<WindowDecorations> createState() => _WindowDecorationsState();
@@ -28,6 +39,7 @@ class WindowDecorations extends StatefulWidget {
 
 class _WindowDecorationsState extends State<WindowDecorations> {
   BaseWindowController? _preparedWindow;
+  bool? _preparedClientSide;
 
   WindowDecorationStyle get _style =>
       widget.style ?? WindowDecorationTheme.of(context);
@@ -44,22 +56,30 @@ class _WindowDecorationsState extends State<WindowDecorations> {
     _prepareWindow();
   }
 
-  /// Takes the decorations away from the window system.
+  /// Takes the decorations away from the window system, or hands them back.
   ///
-  /// This only has to be done as the window changes, not every time the
-  /// decorations are rebuilt. The style makes no difference: every style draws
-  /// the same parts of the window.
+  /// This only has to be done as the window or [WindowDecorations.clientSide]
+  /// changes, not every time the decorations are rebuilt. The style makes no
+  /// difference: every style draws the same parts of the window.
   void _prepareWindow() {
     final BaseWindowController controller = WindowScope.of(context);
-    if (identical(controller, _preparedWindow)) {
+    if (identical(controller, _preparedWindow) &&
+        widget.clientSide == _preparedClientSide) {
       return;
     }
     _preparedWindow = controller;
-    WindowPlatform.of(controller).setDecorated(false);
+    _preparedClientSide = widget.clientSide;
+    WindowPlatform.of(controller).setDecorated(!widget.clientSide);
   }
 
   @override
   Widget build(BuildContext context) {
+    // The window system is drawing the decorations, so there is nothing to draw
+    // around the window contents and nothing to put around them here.
+    if (!widget.clientSide) {
+      return widget.child;
+    }
+
     final WindowDecorationStyle style = _style;
     final WindowController controller =
         WindowScope.of(context) as WindowController;
