@@ -56,6 +56,41 @@ void main() {
     }
   });
 
+  test('the Windows style leaves the frame to the desktop', () {
+    // Windows hands the app the client area and keeps drawing the frame around
+    // it, so the decorations have nothing to draw outside the window and
+    // nothing to leave room for.
+    const FluentWindowDecorationStyle style = FluentWindowDecorationStyle();
+    expect(style.shadowExtents, EdgeInsets.zero);
+    expect(style.cornerRadius(isMaximized: false), BorderRadius.zero);
+
+    // The window is resized by the sizing border in its frame, so no part of
+    // the window may be taken for a resize handle.
+    for (final Offset position in <Offset>[
+      Offset.zero,
+      const Offset(200, 0),
+      const Offset(399, 0),
+      const Offset(0, 200),
+      const Offset(200, 200),
+      const Offset(399, 200),
+      const Offset(0, 399),
+      const Offset(200, 399),
+      const Offset(399, 399),
+    ]) {
+      expect(
+        WindowResizeHandles.edgeAt(
+          position,
+          const Size(400, 400),
+          shadowExtents: style.shadowExtents,
+          resizeBorder: style.resizeBorder,
+          cornerRadius: style.cornerRadius(isMaximized: false),
+        ),
+        isNull,
+        reason: '$position was taken for a resize handle',
+      );
+    }
+  });
+
   group('resize handles', () {
     // A 400x400 window drawn in the GTK style, so the window itself is the
     // rectangle from 26,23 to 374,371 with 15 pixel rounded corners.
