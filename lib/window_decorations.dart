@@ -15,7 +15,9 @@
 ///
 /// Windows are drawn in the style of the platform the app is running on. To
 /// draw them in a particular style instead, pass a [WindowDecorationStyle] to
-/// [WindowDecorations], or put a [WindowDecorationTheme] above it.
+/// [WindowDecorations], or put a [WindowDecorationTheme] above it. No style
+/// asks anything of the window it is drawn around, so the decorations of every
+/// desktop can be looked at on any one of them.
 library;
 
 export 'src/window_decorations/aqua/aqua_style.dart';

@@ -56,38 +56,42 @@ void main() {
     }
   });
 
-  test('the Windows style leaves the frame to the desktop', () {
-    // Windows hands the app the client area and keeps drawing the frame around
-    // it, so the decorations have nothing to draw outside the window and
-    // nothing to leave room for.
-    const FluentWindowDecorationStyle style = FluentWindowDecorationStyle();
-    expect(style.shadowExtents, EdgeInsets.zero);
-    expect(style.cornerRadius(isMaximized: false), BorderRadius.zero);
-
-    // The window is resized by the sizing border in its frame, so no part of
-    // the window may be taken for a resize handle.
-    for (final Offset position in <Offset>[
-      Offset.zero,
-      const Offset(200, 0),
-      const Offset(399, 0),
-      const Offset(0, 200),
-      const Offset(200, 200),
-      const Offset(399, 200),
-      const Offset(0, 399),
-      const Offset(200, 399),
-      const Offset(399, 399),
+  testWidgets('every style can be drawn on any platform', (
+    WidgetTester tester,
+  ) async {
+    // Nothing in a style touches the window it is drawn around, so the
+    // decorations of every desktop can be looked at on any one of them.
+    for (final WindowDecorationStyle style in <WindowDecorationStyle>[
+      const GtkWindowDecorationStyle(),
+      const FluentWindowDecorationStyle(),
+      const AquaWindowDecorationStyle(),
     ]) {
-      expect(
-        WindowResizeHandles.edgeAt(
-          position,
-          const Size(400, 400),
-          shadowExtents: style.shadowExtents,
-          resizeBorder: style.resizeBorder,
-          cornerRadius: style.cornerRadius(isMaximized: false),
-        ),
-        isNull,
-        reason: '$position was taken for a resize handle',
+      int closed = 0;
+      final WindowDecorationDetails window = WindowDecorationDetails(
+        title: 'A Window',
+        isActivated: true,
+        isMaximized: false,
+        canResize: true,
+        onClose: () => closed++,
+        onMinimize: () {},
+        onToggleMaximize: () {},
+        onActivate: () {},
+        onMove: (int button) {},
+        onResize: (WindowEdge edge, int button) {},
       );
+      await tester.pumpWidget(
+        Directionality(
+          textDirection: TextDirection.ltr,
+          child: Builder(
+            builder: (BuildContext context) =>
+                style.buildTitleBar(context, window),
+          ),
+        ),
+      );
+
+      expect(find.text('A Window'), findsOneWidget, reason: '$style');
+      await tester.tap(find.bySemanticsLabel('Close'));
+      expect(closed, 1, reason: '$style');
     }
   });
 

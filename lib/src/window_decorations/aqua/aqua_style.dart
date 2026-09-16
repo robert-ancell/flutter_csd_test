@@ -1,5 +1,4 @@
 import 'package:flutter/widgets.dart';
-import "package:flutter/src/widgets/_window.dart";
 
 import '../shadow_extents.dart';
 import '../style.dart';
@@ -70,11 +69,5 @@ class AquaWindowDecorationStyle extends WindowDecorationStyle {
         );
       },
     );
-  }
-
-  @override
-  void prepareWindow(BaseWindowController controller) {
-    // Needs the macOS equivalent of setDecorated() and setBackgroundColor(),
-    // i.e. a borderless window with a transparent, full size content view.
   }
 }

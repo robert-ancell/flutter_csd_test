@@ -2,7 +2,6 @@ import 'dart:math' as math;
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
-import "package:flutter/src/widgets/_window.dart";
 
 import 'aqua/aqua_style.dart';
 import 'fluent/fluent_style.dart';
@@ -124,10 +123,6 @@ abstract class WindowDecorationStyle {
     WindowDecorationDetails window,
     Widget child,
   );
-
-  /// Puts a window into the state this style needs before it is first shown,
-  /// i.e. stops the window system drawing decorations of its own.
-  void prepareWindow(BaseWindowController controller);
 
   /// Shrinks [insets] until they leave at least a pixel of room in [size].
   ///

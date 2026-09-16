@@ -4,7 +4,7 @@ import "package:flutter/src/widgets/_window.dart";
 import 'resize_handles.dart';
 import 'style.dart';
 import 'theme.dart';
-import 'window_gestures.dart';
+import 'window_platform.dart';
 
 /// Draws client side decorations around the contents of a window.
 ///
@@ -28,7 +28,6 @@ class WindowDecorations extends StatefulWidget {
 
 class _WindowDecorationsState extends State<WindowDecorations> {
   BaseWindowController? _preparedWindow;
-  WindowDecorationStyle? _preparedStyle;
 
   WindowDecorationStyle get _style =>
       widget.style ?? WindowDecorationTheme.of(context);
@@ -45,20 +44,18 @@ class _WindowDecorationsState extends State<WindowDecorations> {
     _prepareWindow();
   }
 
-  /// Stops the window system drawing decorations of its own.
+  /// Takes the decorations away from the window system.
   ///
-  /// This only has to be done as the window or the style changes, not every
-  /// time the decorations are rebuilt.
+  /// This only has to be done as the window changes, not every time the
+  /// decorations are rebuilt. The style makes no difference: every style draws
+  /// the same parts of the window.
   void _prepareWindow() {
     final BaseWindowController controller = WindowScope.of(context);
-    final WindowDecorationStyle style = _style;
-    if (identical(controller, _preparedWindow) &&
-        identical(style, _preparedStyle)) {
+    if (identical(controller, _preparedWindow)) {
       return;
     }
     _preparedWindow = controller;
-    _preparedStyle = style;
-    style.prepareWindow(controller);
+    WindowPlatform.of(controller).setDecorated(false);
   }
 
   @override
@@ -66,7 +63,7 @@ class _WindowDecorationsState extends State<WindowDecorations> {
     final WindowDecorationStyle style = _style;
     final WindowController controller =
         WindowScope.of(context) as WindowController;
-    final WindowGestures gestures = WindowGestures.of(controller);
+    final WindowPlatform platform = WindowPlatform.of(controller);
 
     // Maximized windows are tiled against the screen edges, so they can't be
     // resized by their edges and have no margin to put the resize handles in.
@@ -80,37 +77,41 @@ class _WindowDecorationsState extends State<WindowDecorations> {
       onMinimize: () => controller.setMinimized(true),
       onToggleMaximize: () => controller.setMaximized(!controller.isMaximized),
       onActivate: controller.activate,
-      onMove: gestures.beginMove,
-      onResize: gestures.beginResize,
+      onMove: platform.beginMove,
+      onResize: platform.beginResize,
     );
 
-    Widget decorated = ClipRRect(
-      borderRadius: style.cornerRadius(isMaximized: isMaximized),
-      child: Column(
-        children: <Widget>[
-          // The title bar redraws as its buttons are hovered and pressed, so
-          // keep it off the layer the window shadows are drawn on.
-          RepaintBoundary(child: style.buildTitleBar(context, window)),
-          // The debug banner paints outside the bounds of the app, so clip it
-          // to the window contents.
-          //
-          // The contents are also given a layer of their own so that an app
-          // animating doesn't make the decorations around it repaint.
-          Expanded(
-            child: ClipRect(child: RepaintBoundary(child: widget.child)),
-          ),
-        ],
-      ),
+    Widget decorated = Column(
+      children: <Widget>[
+        // The title bar redraws as its buttons are hovered and pressed, so
+        // keep it off the layer the window shadows are drawn on.
+        RepaintBoundary(child: style.buildTitleBar(context, window)),
+        // The debug banner paints outside the bounds of the app, so clip it
+        // to the window contents.
+        //
+        // The contents are also given a layer of their own so that an app
+        // animating doesn't make the decorations around it repaint.
+        Expanded(child: ClipRect(child: RepaintBoundary(child: widget.child))),
+      ],
     );
 
-    if (window.canResize) {
-      decorated = WindowResizeHandles(
-        shadowExtents: style.shadowExtents,
-        resizeBorder: style.resizeBorder,
-        cornerRadius: style.cornerRadius(isMaximized: isMaximized),
-        onResize: window.onResize,
-        child: style.buildShadow(context, window, decorated),
+    // Where the window system goes on drawing the frame it only gave up its
+    // title bar, so the title bar is the whole of the decorations. Everywhere
+    // else the app draws the window itself, borders, corners, shadow and all.
+    if (!platform.drawsFrame) {
+      decorated = ClipRRect(
+        borderRadius: style.cornerRadius(isMaximized: isMaximized),
+        child: decorated,
       );
+      if (window.canResize) {
+        decorated = WindowResizeHandles(
+          shadowExtents: style.shadowExtents,
+          resizeBorder: style.resizeBorder,
+          cornerRadius: style.cornerRadius(isMaximized: isMaximized),
+          onResize: window.onResize,
+          child: style.buildShadow(context, window, decorated),
+        );
+      }
     }
 
     return Directionality(textDirection: TextDirection.ltr, child: decorated);
