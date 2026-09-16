@@ -5,8 +5,8 @@ import "package:flutter/src/widgets/_window_win32.dart";
 
 import 'style.dart';
 
-/// The window system a window belongs to, and the things client side
-/// decorations need from it.
+/// The window system a window belongs to, and the things the window
+/// decoration widgets need from it.
 ///
 /// These are the things the cross platform [WindowController] doesn't have:
 /// taking away the decorations the window system draws, and handing a drag

@@ -1,1 +1,1 @@
-Test project showing client side decorations.
+Test project showing window decoration widgets.

@@ -1,5 +1,5 @@
 name: flutter_csd_test
-description: "Test project showing client side decorations."
+description: "Test project showing window decoration widgets."
 publish_to: "none"
 version: 1.0.0+1
 

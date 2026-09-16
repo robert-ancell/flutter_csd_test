@@ -6,7 +6,7 @@ import 'style.dart';
 import 'theme.dart';
 import 'window_platform.dart';
 
-/// Draws client side decorations around the contents of a window.
+/// Draws window decoration widgets around the contents of a window.
 ///
 /// Gives the window a title bar with minimize, maximize and close buttons,
 /// rounded corners, a drop shadow and borders that can be dragged to resize it,

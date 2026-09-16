@@ -60,8 +60,8 @@ class GtkShadow {
   }
 }
 
-/// The shadow GTK3 Adwaita draws around a client side decorated window, i.e.
-/// the box-shadow of the "decoration" node in that theme.
+/// The shadow GTK3 Adwaita draws around a window that draws its own
+/// decorations, i.e. the box-shadow of the "decoration" node in that theme.
 class GtkWindowShadows extends StatelessWidget {
   final Widget child;
   final bool isActivated;
@@ -107,9 +107,9 @@ class GtkWindowShadows extends StatelessWidget {
 
   /// The space that has to be left around a window for its shadows.
   ///
-  /// This is how GTK3 sizes the invisible border around a client side decorated
-  /// window: far enough out for every shadow to be drawn in full, and never
-  /// less than the resize border.
+  /// This is how GTK3 sizes the invisible border around a window that draws
+  /// its own decorations: far enough out for every shadow to be drawn in full,
+  /// and never less than the resize border.
   static EdgeInsets extentsFor(double resizeBorder) {
     EdgeInsets result = EdgeInsets.all(resizeBorder);
     for (final GtkShadow shadow in <GtkShadow>[

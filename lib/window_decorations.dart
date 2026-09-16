@@ -1,4 +1,4 @@
-/// Client side window decorations, drawn by the app rather than the window
+/// Window decoration widgets, drawn by the app rather than the window
 /// system, in the style of a desktop.
 ///
 /// Each desktop is emulated rather than asked how to draw, in the same way the
