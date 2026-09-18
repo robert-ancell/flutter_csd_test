@@ -66,10 +66,13 @@ class MacOSWindowPlatform extends WindowPlatform {
   }
 
   @override
-  void beginMove(int button) {
+  void beginMove() {
     // The event being handled is the press that started the drag, which is what
     // macOS wants to track the pointer from.
-    final ffi.Pointer<ffi.Void> event = _objcGetId(_nsApp, _sel('currentEvent'));
+    final ffi.Pointer<ffi.Void> event = _objcGetId(
+      _nsApp,
+      _sel('currentEvent'),
+    );
     if (event == ffi.nullptr) {
       return;
     }
@@ -81,7 +84,7 @@ class MacOSWindowPlatform extends WindowPlatform {
   }
 
   @override
-  void beginResize(WindowEdge edge, int button) {
+  void beginResize(WindowEdge edge) {
     // Never reached: the resize handles are only drawn where the app owns the
     // frame, and on macOS the window server keeps it. There is no equivalent of
     // performWindowDragWithEvent: for resizing, so there is nothing to call.
@@ -102,17 +105,21 @@ const int _nsWindowTitleHidden = 1;
 /// NSWindowCloseButton, NSWindowMiniaturizeButton and NSWindowZoomButton.
 const List<int> _standardWindowButtons = <int>[0, 1, 2];
 
-ffi.Pointer<ffi.Void> get _nsApp =>
-    _objcGetId(_objcGetClass(_cString('NSApplication')), _sel('sharedApplication'));
+ffi.Pointer<ffi.Void> get _nsApp => _objcGetId(
+  _objcGetClass(_cString('NSApplication')),
+  _sel('sharedApplication'),
+);
 
-final Map<String, ffi.Pointer<ffi.Void>> _selectors = <String, ffi.Pointer<ffi.Void>>{};
+final Map<String, ffi.Pointer<ffi.Void>> _selectors =
+    <String, ffi.Pointer<ffi.Void>>{};
 
 /// Looks up the selector named [name], registering it the first time.
 ffi.Pointer<ffi.Void> _sel(String name) {
   return _selectors.putIfAbsent(name, () => _selRegisterName(_cString(name)));
 }
 
-final Map<String, ffi.Pointer<ffi.Char>> _cStrings = <String, ffi.Pointer<ffi.Char>>{};
+final Map<String, ffi.Pointer<ffi.Char>> _cStrings =
+    <String, ffi.Pointer<ffi.Char>>{};
 
 /// Copies [value] into memory the Objective-C runtime can read.
 ///
@@ -121,7 +128,9 @@ final Map<String, ffi.Pointer<ffi.Char>> _cStrings = <String, ffi.Pointer<ffi.Ch
 ffi.Pointer<ffi.Char> _cString(String value) {
   return _cStrings.putIfAbsent(value, () {
     final List<int> bytes = utf8.encode(value);
-    final ffi.Pointer<ffi.Uint8> result = _malloc(bytes.length + 1).cast<ffi.Uint8>();
+    final ffi.Pointer<ffi.Uint8> result = _malloc(
+      bytes.length + 1,
+    ).cast<ffi.Uint8>();
     for (int i = 0; i < bytes.length; i++) {
       result[i] = bytes[i];
     }
@@ -133,10 +142,14 @@ ffi.Pointer<ffi.Char> _cString(String value) {
 @ffi.Native<ffi.Pointer<ffi.Void> Function(ffi.UintPtr)>(symbol: 'malloc')
 external ffi.Pointer<ffi.Void> _malloc(int size);
 
-@ffi.Native<ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Char>)>(symbol: 'objc_getClass')
+@ffi.Native<ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Char>)>(
+  symbol: 'objc_getClass',
+)
 external ffi.Pointer<ffi.Void> _objcGetClass(ffi.Pointer<ffi.Char> name);
 
-@ffi.Native<ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Char>)>(symbol: 'sel_registerName')
+@ffi.Native<ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Char>)>(
+  symbol: 'sel_registerName',
+)
 external ffi.Pointer<ffi.Void> _selRegisterName(ffi.Pointer<ffi.Char> name);
 
 // objc_msgSend has to be called through a pointer typed for the exact message
@@ -146,27 +159,53 @@ external ffi.Pointer<ffi.Void> _selRegisterName(ffi.Pointer<ffi.Char> name);
 
 final ffi.DynamicLibrary _process = ffi.DynamicLibrary.process();
 
-final ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Void>, ffi.Pointer<ffi.Void>) _objcGetId =
-    _process
-        .lookupFunction<
-          ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Void>, ffi.Pointer<ffi.Void>),
-          ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Void>, ffi.Pointer<ffi.Void>)
-        >('objc_msgSend');
+final ffi.Pointer<ffi.Void> Function(
+  ffi.Pointer<ffi.Void>,
+  ffi.Pointer<ffi.Void>,
+)
+_objcGetId = _process
+    .lookupFunction<
+      ffi.Pointer<ffi.Void> Function(
+        ffi.Pointer<ffi.Void>,
+        ffi.Pointer<ffi.Void>,
+      ),
+      ffi.Pointer<ffi.Void> Function(
+        ffi.Pointer<ffi.Void>,
+        ffi.Pointer<ffi.Void>,
+      )
+    >('objc_msgSend');
 
-final int Function(ffi.Pointer<ffi.Void>, ffi.Pointer<ffi.Void>) _objcGetUnsignedLong = _process
+final int Function(ffi.Pointer<ffi.Void>, ffi.Pointer<ffi.Void>)
+_objcGetUnsignedLong = _process
     .lookupFunction<
       ffi.UnsignedLong Function(ffi.Pointer<ffi.Void>, ffi.Pointer<ffi.Void>),
       int Function(ffi.Pointer<ffi.Void>, ffi.Pointer<ffi.Void>)
     >('objc_msgSend');
 
-final ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Void>, ffi.Pointer<ffi.Void>, int)
+final ffi.Pointer<ffi.Void> Function(
+  ffi.Pointer<ffi.Void>,
+  ffi.Pointer<ffi.Void>,
+  int,
+)
 _objcGetIdWithLong = _process
     .lookupFunction<
-      ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Void>, ffi.Pointer<ffi.Void>, ffi.Long),
-      ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Void>, ffi.Pointer<ffi.Void>, int)
+      ffi.Pointer<ffi.Void> Function(
+        ffi.Pointer<ffi.Void>,
+        ffi.Pointer<ffi.Void>,
+        ffi.Long,
+      ),
+      ffi.Pointer<ffi.Void> Function(
+        ffi.Pointer<ffi.Void>,
+        ffi.Pointer<ffi.Void>,
+        int,
+      )
     >('objc_msgSend');
 
-final void Function(ffi.Pointer<ffi.Void>, ffi.Pointer<ffi.Void>, ffi.Pointer<ffi.Void>)
+final void Function(
+  ffi.Pointer<ffi.Void>,
+  ffi.Pointer<ffi.Void>,
+  ffi.Pointer<ffi.Void>,
+)
 _objcSendId = _process
     .lookupFunction<
       ffi.Void Function(
@@ -174,17 +213,26 @@ _objcSendId = _process
         ffi.Pointer<ffi.Void>,
         ffi.Pointer<ffi.Void>,
       ),
-      void Function(ffi.Pointer<ffi.Void>, ffi.Pointer<ffi.Void>, ffi.Pointer<ffi.Void>)
+      void Function(
+        ffi.Pointer<ffi.Void>,
+        ffi.Pointer<ffi.Void>,
+        ffi.Pointer<ffi.Void>,
+      )
     >('objc_msgSend');
 
-final void Function(ffi.Pointer<ffi.Void>, ffi.Pointer<ffi.Void>, int) _objcSendUnsignedLong =
-    _process
-        .lookupFunction<
-          ffi.Void Function(ffi.Pointer<ffi.Void>, ffi.Pointer<ffi.Void>, ffi.UnsignedLong),
-          void Function(ffi.Pointer<ffi.Void>, ffi.Pointer<ffi.Void>, int)
-        >('objc_msgSend');
+final void Function(ffi.Pointer<ffi.Void>, ffi.Pointer<ffi.Void>, int)
+_objcSendUnsignedLong = _process
+    .lookupFunction<
+      ffi.Void Function(
+        ffi.Pointer<ffi.Void>,
+        ffi.Pointer<ffi.Void>,
+        ffi.UnsignedLong,
+      ),
+      void Function(ffi.Pointer<ffi.Void>, ffi.Pointer<ffi.Void>, int)
+    >('objc_msgSend');
 
-final void Function(ffi.Pointer<ffi.Void>, ffi.Pointer<ffi.Void>, int) _objcSendLong = _process
+final void Function(ffi.Pointer<ffi.Void>, ffi.Pointer<ffi.Void>, int)
+_objcSendLong = _process
     .lookupFunction<
       ffi.Void Function(ffi.Pointer<ffi.Void>, ffi.Pointer<ffi.Void>, ffi.Long),
       void Function(ffi.Pointer<ffi.Void>, ffi.Pointer<ffi.Void>, int)
@@ -192,12 +240,12 @@ final void Function(ffi.Pointer<ffi.Void>, ffi.Pointer<ffi.Void>, int) _objcSend
 
 /// BOOL is a signed char on every platform macOS runs on, so it is passed as
 /// one rather than as a C bool.
-final void Function(ffi.Pointer<ffi.Void>, ffi.Pointer<ffi.Void>, int) _objcSendSignedChar =
-    _process
-        .lookupFunction<
-          ffi.Void Function(ffi.Pointer<ffi.Void>, ffi.Pointer<ffi.Void>, ffi.Int8),
-          void Function(ffi.Pointer<ffi.Void>, ffi.Pointer<ffi.Void>, int)
-        >('objc_msgSend');
+final void Function(ffi.Pointer<ffi.Void>, ffi.Pointer<ffi.Void>, int)
+_objcSendSignedChar = _process
+    .lookupFunction<
+      ffi.Void Function(ffi.Pointer<ffi.Void>, ffi.Pointer<ffi.Void>, ffi.Int8),
+      void Function(ffi.Pointer<ffi.Void>, ffi.Pointer<ffi.Void>, int)
+    >('objc_msgSend');
 
 void _objcSendBool(
   ffi.Pointer<ffi.Void> target,

@@ -49,11 +49,13 @@ class WindowDecorationDetails {
   /// Brings the window to the front and gives it the keyboard focus.
   final VoidCallback onActivate;
 
-  /// Starts dragging the whole window with the given pointer button.
-  final void Function(int button) onMove;
+  /// Hands the press being handled to the window system, which drags the whole
+  /// window with it until the pointer is released.
+  final VoidCallback onMove;
 
-  /// Starts dragging one edge or corner of the window.
-  final void Function(WindowEdge edge, int button) onResize;
+  /// Hands the press being handled to the window system, which drags one edge
+  /// or corner of the window with it until the pointer is released.
+  final void Function(WindowEdge edge) onResize;
 
   const WindowDecorationDetails({
     required this.title,
@@ -111,6 +113,9 @@ abstract class WindowDecorationStyle {
 
   /// Builds the bar along the top of the window that holds its title and the
   /// buttons that close, minimize and maximize it.
+  ///
+  /// Whatever parts of it are not a button should go in a [WindowMoveArea], so
+  /// that the window can be dragged around by them.
   Widget buildTitleBar(BuildContext context, WindowDecorationDetails window);
 
   /// Draws the shadow the window casts on what is behind it, around [child].

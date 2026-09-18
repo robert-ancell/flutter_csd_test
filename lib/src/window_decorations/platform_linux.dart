@@ -39,12 +39,16 @@ class LinuxWindowPlatform extends WindowPlatform {
       );
   }
 
-  @override
-  void beginMove(int button) => controller.beginMoveDrag(button: button);
+  /// The pointer button a window is dragged with, which is always the primary
+  /// one: the decorations ignore presses of any other button.
+  static const int _dragButton = 1;
 
   @override
-  void beginResize(WindowEdge edge, int button) =>
-      controller.beginResizeDrag(edge: _dragEdges[edge]!, button: button);
+  void beginMove() => controller.beginMoveDrag(button: _dragButton);
+
+  @override
+  void beginResize(WindowEdge edge) =>
+      controller.beginResizeDrag(edge: _dragEdges[edge]!, button: _dragButton);
 }
 
 /// What the windowing API calls each edge of a window, i.e. the compass point

@@ -63,7 +63,7 @@ class _WindowMoveAreaState extends State<WindowMoveArea> {
       return;
     }
     _reset();
-    widget.window.onMove(1);
+    widget.window.onMove();
   }
 
   void _reset() {

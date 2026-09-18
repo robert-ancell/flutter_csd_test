@@ -76,8 +76,8 @@ void main() {
         onMinimize: () {},
         onToggleMaximize: () {},
         onActivate: () {},
-        onMove: (int button) {},
-        onResize: (WindowEdge edge, int button) {},
+        onMove: () {},
+        onResize: (WindowEdge edge) {},
       );
       await tester.pumpWidget(
         Directionality(
@@ -152,7 +152,7 @@ void main() {
               shadowExtents: style.shadowExtents,
               resizeBorder: style.resizeBorder,
               cornerRadius: style.cornerRadius(isMaximized: false),
-              onResize: (WindowEdge edge, int button) => resized.add(edge),
+              onResize: (WindowEdge edge) => resized.add(edge),
               // The window itself, which fills the whole area the handles are
               // laid out in.
               child: SizedBox.expand(

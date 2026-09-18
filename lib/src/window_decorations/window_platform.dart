@@ -17,9 +17,7 @@ import 'style.dart';
 ///
 /// Only GTK has all of this in the windowing API. Windows and macOS are done by
 /// calling the platform directly, in [Win32WindowPlatform] and
-/// [MacOSWindowPlatform], so that this app builds against the master channel.
-/// As the API grows to cover them those can be emptied out the way
-/// [LinuxWindowPlatform] has been.
+/// [MacOSWindowPlatform].
 abstract class WindowPlatform {
   const WindowPlatform();
 
@@ -58,14 +56,14 @@ abstract class WindowPlatform {
   /// rather than the app.
   void setDecorated(bool decorated);
 
-  /// Hands a press on the title bar to the window system, which drags the
-  /// window until the button is released.
-  void beginMove(int button);
+  /// Hands the press on the title bar being handled to the window system,
+  /// which drags the window until the pointer is released.
+  void beginMove();
 
-  /// Hands a press on a window border to the window system, which resizes the
-  /// window until the button is released.
+  /// Hands the press on a window border being handled to the window system,
+  /// which resizes the window until the pointer is released.
   ///
   /// Only called where [drawsFrame] is false, because the app only draws the
   /// borders to press when the window system has given them up.
-  void beginResize(WindowEdge edge, int button);
+  void beginResize(WindowEdge edge);
 }

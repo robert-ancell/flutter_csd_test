@@ -28,15 +28,20 @@ class Win32WindowPlatform extends WindowPlatform {
       _Win32Frame.of(controller.windowHandle).setDecorated(decorated);
 
   @override
-  void beginMove(int button) {
+  void beginMove() {
     // The pointer has to be let go of first, or the window being dragged never
     // sees the pointer events that move it.
     _releaseCapture();
-    _sendMessage(controller.windowHandle, _wmSysCommand, _scMove | _htCaption, 0);
+    _sendMessage(
+      controller.windowHandle,
+      _wmSysCommand,
+      _scMove | _htCaption,
+      0,
+    );
   }
 
   @override
-  void beginResize(WindowEdge edge, int button) {
+  void beginResize(WindowEdge edge) {
     _releaseCapture();
     _sendMessage(
       controller.windowHandle,
@@ -83,11 +88,16 @@ class _Win32Frame {
       0,
       0,
       0,
-      _swpNoMove | _swpNoSize | _swpNoZOrder | _swpNoActivate | _swpFrameChanged,
+      _swpNoMove |
+          _swpNoSize |
+          _swpNoZOrder |
+          _swpNoActivate |
+          _swpFrameChanged,
     );
   }
 
-  /// Returns what to reply to [message] with, or null to let Windows handle it.
+  /// Returns what to reply to [message] with, or null to let Windows handle
+  /// it.
   int? handleMessage(int message, int wParam, int lParam) {
     if (message == _wmNcDestroy) {
       _frames.remove(windowHandle.address);
@@ -109,7 +119,8 @@ class _Win32Frame {
     // The first rectangle of NCCALCSIZE_PARAMS is the proposed client area, and
     // is the first field of the struct, so the parameters can be read as a
     // rectangle.
-    final clientRect = ffi.Pointer<_Win32Rect>.fromAddress(lParam);
+    final ffi.Pointer<_Win32Rect> clientRect =
+        ffi.Pointer<_Win32Rect>.fromAddress(lParam);
     clientRect.ref.top -= _getSystemMetricsForDpi(
       _smCyCaption,
       _getDpiForWindow(windowHandle),
@@ -136,8 +147,11 @@ int _subclassProc(
   return result ?? _defSubclassProc(windowHandle, message, wParam, lParam);
 }
 
-final ffi.Pointer<ffi.NativeFunction<_SubclassProcNative>> _subclassProcPointer =
-    ffi.Pointer.fromFunction<_SubclassProcNative>(_subclassProc, 0);
+final ffi.Pointer<ffi.NativeFunction<_SubclassProcNative>>
+_subclassProcPointer = ffi.Pointer.fromFunction<_SubclassProcNative>(
+  _subclassProc,
+  0,
+);
 
 typedef _SubclassProcNative =
     ffi.IntPtr Function(
@@ -230,18 +244,27 @@ _setWindowSubclass = _comctl32
     >('SetWindowSubclass');
 
 final int Function(ffi.Pointer<ffi.Void>, int, int, int) _defSubclassProc =
-    _comctl32
-        .lookupFunction<
-          ffi.IntPtr Function(ffi.Pointer<ffi.Void>, ffi.Uint32, ffi.UintPtr, ffi.IntPtr),
-          int Function(ffi.Pointer<ffi.Void>, int, int, int)
-        >('DefSubclassProc');
+    _comctl32.lookupFunction<
+      ffi.IntPtr Function(
+        ffi.Pointer<ffi.Void>,
+        ffi.Uint32,
+        ffi.UintPtr,
+        ffi.IntPtr,
+      ),
+      int Function(ffi.Pointer<ffi.Void>, int, int, int)
+    >('DefSubclassProc');
 
 @ffi.Native<ffi.Bool Function()>(symbol: 'ReleaseCapture')
 external bool _releaseCapture();
 
-@ffi.Native<ffi.IntPtr Function(ffi.Pointer<ffi.Void>, ffi.Uint32, ffi.UintPtr, ffi.IntPtr)>(
-  symbol: 'SendMessageW',
-)
+@ffi.Native<
+  ffi.IntPtr Function(
+    ffi.Pointer<ffi.Void>,
+    ffi.Uint32,
+    ffi.UintPtr,
+    ffi.IntPtr,
+  )
+>(symbol: 'SendMessageW')
 external int _sendMessage(
   ffi.Pointer<ffi.Void> windowHandle,
   int message,
@@ -270,8 +293,12 @@ external bool _setWindowPos(
   int flags,
 );
 
-@ffi.Native<ffi.Uint32 Function(ffi.Pointer<ffi.Void>)>(symbol: 'GetDpiForWindow')
+@ffi.Native<ffi.Uint32 Function(ffi.Pointer<ffi.Void>)>(
+  symbol: 'GetDpiForWindow',
+)
 external int _getDpiForWindow(ffi.Pointer<ffi.Void> windowHandle);
 
-@ffi.Native<ffi.Int32 Function(ffi.Int32, ffi.Uint32)>(symbol: 'GetSystemMetricsForDpi')
+@ffi.Native<ffi.Int32 Function(ffi.Int32, ffi.Uint32)>(
+  symbol: 'GetSystemMetricsForDpi',
+)
 external int _getSystemMetricsForDpi(int index, int dpi);

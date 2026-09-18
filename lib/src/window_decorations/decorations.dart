@@ -105,20 +105,31 @@ class _WindowDecorationsState extends State<WindowDecorations> {
       children: <Widget>[
         // The title bar redraws as its buttons are hovered and pressed, so
         // keep it off the layer the window shadows are drawn on.
-        RepaintBoundary(child: style.buildTitleBar(context, window)),
+        //
+        // Nothing above a Window lays text out, so the title bar carries a
+        // text direction of its own. It only goes around the decorations: the
+        // app below is left to pick its own.
+        RepaintBoundary(
+          child: Directionality(
+            textDirection: TextDirection.ltr,
+            child: style.buildTitleBar(context, window),
+          ),
+        ),
         // The debug banner paints outside the bounds of the app, so clip it
         // to the window contents.
         //
         // The contents are also given a layer of their own so that an app
         // animating doesn't make the decorations around it repaint.
-        Expanded(child: ClipRect(child: RepaintBoundary(child: widget.child))),
+        Expanded(
+          child: ClipRect(child: RepaintBoundary(child: widget.child)),
+        ),
       ],
     );
 
     // Where the window system goes on drawing the frame it has given up only
     // the strip its title bar sat in, so the title bar is the whole of the
-    // decorations. Everywhere
-    // else the app draws the window itself, borders, corners, shadow and all.
+    // decorations. Everywhere else the app draws the window itself, borders,
+    // corners, shadow and all.
     if (!platform.drawsFrame) {
       decorated = ClipRRect(
         borderRadius: style.cornerRadius(isMaximized: isMaximized),
@@ -135,6 +146,6 @@ class _WindowDecorationsState extends State<WindowDecorations> {
       }
     }
 
-    return Directionality(textDirection: TextDirection.ltr, child: decorated);
+    return decorated;
   }
 }

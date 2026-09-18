@@ -20,8 +20,13 @@
 /// desktop can be looked at on any one of them.
 ///
 /// Turning [WindowDecorations.clientSide] off hands the window back to the
-/// window system, which is how these decorations can be compared against the
-/// ones they are imitating.
+/// window system, so that it draws the decorations itself.
+///
+/// A look of your own is a subclass of [WindowDecorationStyle]. It is handed a
+/// [WindowDecorationDetails] describing the window and is asked to build a
+/// title bar for it, which it can make draggable by putting the empty parts in
+/// a [WindowMoveArea], and to say how much room it needs around the window for
+/// its shadow, which [shadowExtentsOf] measures.
 library;
 
 export 'src/window_decorations/aqua/aqua_style.dart';
@@ -29,5 +34,7 @@ export 'src/window_decorations/decorations.dart';
 export 'src/window_decorations/fluent/fluent_style.dart';
 export 'src/window_decorations/gtk/gtk_shadow.dart' show GtkShadow;
 export 'src/window_decorations/gtk/gtk_style.dart';
+export 'src/window_decorations/move_area.dart';
+export 'src/window_decorations/shadow_extents.dart';
 export 'src/window_decorations/style.dart';
 export 'src/window_decorations/theme.dart';

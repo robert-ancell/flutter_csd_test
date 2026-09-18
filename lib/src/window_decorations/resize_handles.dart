@@ -16,7 +16,7 @@ import 'style.dart';
 /// Pointer events that aren't on a handle pass straight through to the window.
 class WindowResizeHandles extends StatefulWidget {
   final Widget child;
-  final void Function(WindowEdge edge, int button) onResize;
+  final void Function(WindowEdge edge) onResize;
 
   /// The distance from the edges of this widget to the visible edges of the
   /// window, i.e. the space taken by the window shadow.
@@ -181,13 +181,17 @@ class _WindowResizeHandlesState extends State<WindowResizeHandles> {
       context.size ?? Size.zero,
     );
     if (edge != null) {
-      widget.onResize(edge, 1);
+      widget.onResize(edge);
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return Stack(
+      // Non-directional, so that the handles need no text direction of their
+      // own: they are laid out from the window edges, not from the start of a
+      // line of text.
+      alignment: Alignment.topLeft,
       children: <Widget>[
         widget.child,
         // In front of the window, but only in the way where there is a handle.
