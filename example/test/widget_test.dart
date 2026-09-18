@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:flutter_csd_test/main.dart';
+import 'package:flutter_csd_test_example/main.dart';
 
 void main() {
   testWidgets('the selector offers every decoration and reports a choice', (

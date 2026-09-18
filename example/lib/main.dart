@@ -3,8 +3,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import "package:flutter/src/widgets/_window.dart";
-
-import 'window_decorations.dart';
+import 'package:flutter_csd_test/window_decorations.dart';
 
 /// Quits the application once the only window has gone away.
 ///
