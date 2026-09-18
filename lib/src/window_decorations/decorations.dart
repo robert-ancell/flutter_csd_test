@@ -9,16 +9,15 @@ import 'window_platform.dart';
 /// A widget that decorates the window it is in, in place of the window system.
 ///
 /// The window system is asked to leave the window undecorated, and decorations
-/// are drawn around [child] instead, driving the window through the
-/// [WindowController] of the enclosing [WindowScope]. Taking this widget away
-/// hands the window back.
+/// are drawn around [child] instead. Taking this widget away hands the window
+/// back.
 ///
 /// How the decorations look is up to the [style] given here, the enclosing
 /// [WindowDecorationTheme], or failing that the platform the app is running on.
 ///
-/// The whole window belongs inside [child], so this is usually the widget the
-/// [Window] itself is given. Anything left outside is drawn past the
-/// decorations, where the window has no frame of its own to fall back on.
+/// The whole of the window belongs inside [child], so this is usually the
+/// widget the [Window] itself is given, with only widgets that draw nothing of
+/// their own, such as [WindowDecorationTheme], above it.
 class WindowDecorations extends StatefulWidget {
   final Widget child;
   final WindowDecorationStyle? style;
