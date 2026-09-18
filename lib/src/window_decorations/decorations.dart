@@ -6,16 +6,26 @@ import 'style.dart';
 import 'theme.dart';
 import 'window_platform.dart';
 
-/// Draws window decoration widgets around the contents of a window.
+/// Draws window decorations, and turns off the ones drawn by the window
+/// system.
 ///
 /// Gives the window a title bar with minimize, maximize and close buttons,
-/// rounded corners, a drop shadow and borders that can be dragged to resize it,
-/// in the style of a desktop. The window is driven through the
-/// [WindowController] provided by the enclosing [WindowScope].
+/// rounded corners, a drop shadow and borders that can be dragged to resize
+/// it, in the style of a desktop. The window system is asked to stop drawing
+/// decorations of its own so that the window is not left wearing two sets, and
+/// draws them again once this widget is gone. The window is driven through the
+/// [WindowController] provided by the enclosing [WindowScope], so an app only
+/// has to provide its contents.
 ///
 /// The decorations are drawn in the [style] given here, or the one from the
 /// enclosing [WindowDecorationTheme], or failing that the style of the platform
 /// the app is running on.
+///
+/// Everything in the window belongs inside [child], which usually makes this
+/// the widget the [Window] itself is given. The window system gives up the
+/// frame of the whole window, but these decorations only surround [child], so
+/// anything left outside is drawn past the rounded corners and over the borders
+/// the window is resized by, with nothing between it and the desktop.
 class WindowDecorations extends StatefulWidget {
   final Widget child;
   final WindowDecorationStyle? style;
