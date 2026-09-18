@@ -3,12 +3,10 @@ import 'package:flutter/widgets.dart';
 
 import 'style.dart';
 
-/// An area of a window that the window can be dragged around by, i.e. the
-/// empty parts of a title bar.
+/// A widget that lets the window be moved by dragging over [child].
 ///
-/// Presses are handed to the window system once the pointer has moved far
-/// enough for them to be a drag rather than a click, and a double click
-/// maximizes the window.
+/// Wrap the parts of a title bar that are not buttons in one of these, so that
+/// the window can be dragged around by them and maximized by a double click.
 class WindowMoveArea extends StatefulWidget {
   final Widget child;
   final WindowDecorationDetails window;

@@ -2,10 +2,10 @@ import 'package:flutter/widgets.dart';
 
 import 'style.dart';
 
-/// The [WindowDecorationStyle] to draw windows in below this widget.
+/// A widget that sets the [WindowDecorationStyle] of the windows below it.
 ///
-/// Without one every window is drawn in the style of the platform the app is
-/// running on, i.e. [WindowDecorationStyle.adaptive].
+/// Without one, windows are drawn in the style of the platform the app is
+/// running on, unless their decorations are given a style of their own.
 class WindowDecorationTheme extends InheritedWidget {
   final WindowDecorationStyle style;
 
