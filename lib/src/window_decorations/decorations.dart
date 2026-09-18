@@ -9,8 +9,8 @@ import 'window_platform.dart';
 /// A widget that decorates the window it is in, in place of the window system.
 ///
 /// The window system is asked to leave the window undecorated, and decorations
-/// are drawn around [child] instead. Taking this widget away hands the window
-/// back.
+/// are drawn around [child] instead. If this widget is removed the window
+/// system returns to drawing the window decorations.
 ///
 /// How the decorations look is up to the [style] given here, the enclosing
 /// [WindowDecorationTheme], or failing that the platform the app is running on.
