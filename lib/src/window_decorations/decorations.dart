@@ -20,18 +20,7 @@ class WindowDecorations extends StatefulWidget {
   final Widget child;
   final WindowDecorationStyle? style;
 
-  /// Whether the app draws the decorations, rather than the window system.
-  ///
-  /// Turning this off leaves the window looking the way the window system
-  /// would draw it, which is what the decorations drawn here are imitating.
-  final bool clientSide;
-
-  const WindowDecorations({
-    super.key,
-    required this.child,
-    this.style,
-    this.clientSide = true,
-  });
+  const WindowDecorations({super.key, required this.child, this.style});
 
   @override
   State<WindowDecorations> createState() => _WindowDecorationsState();
@@ -39,7 +28,6 @@ class WindowDecorations extends StatefulWidget {
 
 class _WindowDecorationsState extends State<WindowDecorations> {
   BaseWindowController? _preparedWindow;
-  bool? _preparedClientSide;
 
   WindowDecorationStyle get _style =>
       widget.style ?? WindowDecorationTheme.of(context);
@@ -51,35 +39,41 @@ class _WindowDecorationsState extends State<WindowDecorations> {
   }
 
   @override
-  void didUpdateWidget(WindowDecorations oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    _prepareWindow();
+  void dispose() {
+    // These decorations are going away, so the window needs the ones the window
+    // system draws back, otherwise it would be left with none at all.
+    _restoreWindow(_preparedWindow);
+    super.dispose();
   }
 
-  /// Takes the decorations away from the window system, or hands them back.
+  /// Takes the decorations away from the window system.
   ///
-  /// This only has to be done as the window or [WindowDecorations.clientSide]
-  /// changes, not every time the decorations are rebuilt. The style makes no
-  /// difference: every style draws the same parts of the window.
+  /// This only has to be done as the window changes, not every time the
+  /// decorations are rebuilt. The style makes no difference: every style draws
+  /// the same parts of the window.
   void _prepareWindow() {
     final BaseWindowController controller = WindowScope.of(context);
-    if (identical(controller, _preparedWindow) &&
-        widget.clientSide == _preparedClientSide) {
+    if (identical(controller, _preparedWindow)) {
       return;
     }
+    _restoreWindow(_preparedWindow);
     _preparedWindow = controller;
-    _preparedClientSide = widget.clientSide;
-    WindowPlatform.of(controller).setDecorated(!widget.clientSide);
+    WindowPlatform.of(controller).setDecorated(false);
+  }
+
+  /// Hands the decorations of [controller] back to the window system.
+  ///
+  /// A window that has already been destroyed is left alone, as it has no
+  /// decorations left to hand back.
+  void _restoreWindow(BaseWindowController? controller) {
+    if (controller == null || controller.isDestroyed) {
+      return;
+    }
+    WindowPlatform.of(controller).setDecorated(true);
   }
 
   @override
   Widget build(BuildContext context) {
-    // The window system is drawing the decorations, so there is nothing to draw
-    // around the window contents and nothing to put around them here.
-    if (!widget.clientSide) {
-      return widget.child;
-    }
-
     final WindowDecorationStyle style = _style;
     final WindowController controller =
         WindowScope.of(context) as WindowController;

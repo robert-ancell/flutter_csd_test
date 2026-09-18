@@ -31,8 +31,8 @@ void main() {
 
     for (final WindowDecoration decoration in WindowDecoration.values) {
       expect(
-        decoration.style != null,
-        decoration.isClientSide,
+        decoration.style,
+        decoration == WindowDecoration.native ? isNull : isNotNull,
         reason: '$decoration disagrees about who draws it',
       );
     }

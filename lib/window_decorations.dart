@@ -19,8 +19,9 @@
 /// asks anything of the window it is drawn around, so the decorations of every
 /// desktop can be looked at on any one of them.
 ///
-/// Turning [WindowDecorations.clientSide] off hands the window back to the
-/// window system, so that it draws the decorations itself.
+/// Leaving [WindowDecorations] out draws the window the way the window system
+/// would, so an app can decorate itself or not by rebuilding with the widget
+/// and without it.
 ///
 /// A look of your own is a subclass of [WindowDecorationStyle]. It is handed a
 /// [WindowDecorationDetails] describing the window and is asked to build a

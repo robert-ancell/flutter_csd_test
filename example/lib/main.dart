@@ -37,9 +37,6 @@ enum WindowDecoration {
   final String label;
   final String description;
 
-  /// Whether the app draws these decorations, rather than the window system.
-  bool get isClientSide => this != WindowDecoration.native;
-
   /// The style to draw the decorations in, or null to leave them to the window
   /// system.
   WindowDecorationStyle? get style => switch (this) {
@@ -75,21 +72,30 @@ class _WindowState extends State<MyWindow> {
 
   WindowDecoration _decoration = WindowDecoration.automatic;
 
+  // Putting the decorations on and taking them off moves the contents of the
+  // window in the widget tree, so they need a key to keep their state.
+  final GlobalKey _appKey = GlobalKey();
+
   @override
   Widget build(BuildContext context) {
+    final Widget app = MyApp(
+      key: _appKey,
+      decoration: _decoration,
+      onChanged: (WindowDecoration decoration) =>
+          setState(() => _decoration = decoration),
+    );
+    final WindowDecorationStyle? style = _decoration.style;
+
     return ViewCollection(
       views: [
         Window(
           controller: controller,
-          child: WindowDecorations(
-            style: _decoration.style,
-            clientSide: _decoration.isClientSide,
-            child: MyApp(
-              decoration: _decoration,
-              onChanged: (WindowDecoration decoration) =>
-                  setState(() => _decoration = decoration),
-            ),
-          ),
+          // Decorating the window is a matter of wrapping its contents in the
+          // decorations, so leaving them to the window system is a matter of
+          // leaving the wrapper out.
+          child: style == null
+              ? app
+              : WindowDecorations(style: style, child: app),
         ),
       ],
     );
