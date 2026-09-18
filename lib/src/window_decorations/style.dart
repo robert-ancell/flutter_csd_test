@@ -46,13 +46,6 @@ class WindowDecorationDetails {
   final VoidCallback onMinimize;
   final VoidCallback onToggleMaximize;
 
-  /// Brings the window to the front and gives it the keyboard focus.
-  final VoidCallback onActivate;
-
-  /// Hands the press being handled to the window system, which drags the whole
-  /// window with it until the pointer is released.
-  final VoidCallback onMove;
-
   /// Hands the press being handled to the window system, which drags one edge
   /// or corner of the window with it until the pointer is released.
   final void Function(WindowEdge edge) onResize;
@@ -65,8 +58,6 @@ class WindowDecorationDetails {
     required this.onClose,
     required this.onMinimize,
     required this.onToggleMaximize,
-    required this.onActivate,
-    required this.onMove,
     required this.onResize,
   });
 }

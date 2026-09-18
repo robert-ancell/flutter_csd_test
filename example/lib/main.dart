@@ -136,23 +136,58 @@ class WindowDecorationSelector extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: RadioGroup<WindowDecoration>(
-          groupValue: decoration,
-          onChanged: (WindowDecoration? decoration) {
-            if (decoration != null) {
-              onChanged(decoration);
-            }
-          },
-          child: ListView(
-            children: [
-              for (final WindowDecoration decoration in WindowDecoration.values)
-                RadioListTile<WindowDecoration>(
-                  value: decoration,
-                  title: Text(decoration.label),
-                  subtitle: Text(decoration.description),
+        child: Column(
+          children: [
+            Expanded(
+              child: RadioGroup<WindowDecoration>(
+                groupValue: decoration,
+                onChanged: (WindowDecoration? decoration) {
+                  if (decoration != null) {
+                    onChanged(decoration);
+                  }
+                },
+                child: ListView(
+                  children: [
+                    for (final WindowDecoration decoration
+                        in WindowDecoration.values)
+                      RadioListTile<WindowDecoration>(
+                        value: decoration,
+                        title: Text(decoration.label),
+                        subtitle: Text(decoration.description),
+                      ),
+                  ],
                 ),
-            ],
-          ),
+              ),
+            ),
+            const WindowDragStrip(),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+/// A piece of the app, nowhere near a title bar, that the window can be
+/// dragged around by.
+///
+/// A [WindowMoveArea] works anywhere inside a window, so this strip moves the
+/// window whichever decorations are drawn around it, including the ones the
+/// window system draws.
+class WindowDragStrip extends StatelessWidget {
+  const WindowDragStrip({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final ColorScheme colors = Theme.of(context).colorScheme;
+    return WindowMoveArea(
+      child: Container(
+        width: double.infinity,
+        padding: const EdgeInsets.symmetric(vertical: 16),
+        color: colors.secondaryContainer,
+        child: Text(
+          'Drag here to move the window',
+          textAlign: TextAlign.center,
+          style: TextStyle(color: colors.onSecondaryContainer),
         ),
       ),
     );

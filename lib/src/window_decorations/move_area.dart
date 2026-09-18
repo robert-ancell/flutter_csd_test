@@ -1,17 +1,22 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/widgets.dart';
+import "package:flutter/src/widgets/_window.dart";
 
-import 'style.dart';
+import 'window_platform.dart';
 
 /// A widget that lets the window be moved by dragging over [child].
 ///
-/// Wrap the parts of a title bar that are not buttons in one of these, so that
-/// the window can be dragged around by them and maximized by a double click.
+/// Dragging anywhere in [child] moves the window, and double clicking it
+/// maximizes the window or restores it, the way dragging a title bar does. Put
+/// one anywhere in a window that should be draggable, whether that is a title
+/// bar, a toolbar, or the background of the window itself.
+///
+/// The drag is handed to the window system, which takes over the pointer until
+/// it is released, so [child] sees a press but never the drag that follows.
 class WindowMoveArea extends StatefulWidget {
   final Widget child;
-  final WindowDecorationDetails window;
 
-  const WindowMoveArea({super.key, required this.child, required this.window});
+  const WindowMoveArea({super.key, required this.child});
 
   @override
   State<WindowMoveArea> createState() => _WindowMoveAreaState();
@@ -26,6 +31,13 @@ class _WindowMoveAreaState extends State<WindowMoveArea> {
   Offset? _lastClickPosition;
   Duration? _lastClickTime;
 
+  /// The window being dragged, looked up as the drag happens.
+  ///
+  /// A style builds its title bar long before anyone drags it, and does so
+  /// with no window at all in the tests, so this is not asked for until there
+  /// is a press to act on.
+  WindowController get _window => WindowScope.of(context) as WindowController;
+
   void _handlePointerDown(PointerDownEvent event) {
     if (event.buttons != kPrimaryButton) {
       return;
@@ -33,8 +45,9 @@ class _WindowMoveAreaState extends State<WindowMoveArea> {
 
     // Moving the window makes it lose focus, so make sure a press on the title
     // bar always brings the window back to the front and focused.
-    if (!widget.window.isActivated) {
-      widget.window.onActivate();
+    final WindowController window = _window;
+    if (!window.isActivated) {
+      window.activate();
     }
 
     final Duration? lastTime = _lastClickTime;
@@ -44,7 +57,7 @@ class _WindowMoveAreaState extends State<WindowMoveArea> {
         event.timeStamp - lastTime < kDoubleTapTimeout &&
         (event.position - lastPosition).distance < kDoubleTapSlop) {
       _reset();
-      widget.window.onToggleMaximize();
+      window.setMaximized(!window.isMaximized);
       return;
     }
 
@@ -61,7 +74,7 @@ class _WindowMoveAreaState extends State<WindowMoveArea> {
       return;
     }
     _reset();
-    widget.window.onMove();
+    WindowPlatform.of(_window).beginMove();
   }
 
   void _reset() {

@@ -46,7 +46,6 @@ class CloudTitleBar extends StatelessWidget {
         children: <Widget>[
           Positioned.fill(
             child: WindowMoveArea(
-              window: window,
               child: Center(child: CloudWindowTitle(window: window)),
             ),
           ),

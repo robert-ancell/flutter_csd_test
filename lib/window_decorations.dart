@@ -23,6 +23,9 @@
 /// would, so an app can decorate itself or not by rebuilding with the widget
 /// and without it.
 ///
+/// Anything wrapped in a [WindowMoveArea] drags the window around, wherever it
+/// sits in an app and whoever drew the decorations around it.
+///
 /// A look of your own is a subclass of [WindowDecorationStyle]. It is handed a
 /// [WindowDecorationDetails] describing the window and is asked to build a
 /// title bar for it, which it can make draggable by putting the empty parts in

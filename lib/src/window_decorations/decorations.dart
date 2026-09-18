@@ -92,8 +92,6 @@ class _WindowDecorationsState extends State<WindowDecorations> {
       onClose: controller.destroy,
       onMinimize: () => controller.setMinimized(true),
       onToggleMaximize: () => controller.setMaximized(!controller.isMaximized),
-      onActivate: controller.activate,
-      onMove: platform.beginMove,
       onResize: platform.beginResize,
     );
 

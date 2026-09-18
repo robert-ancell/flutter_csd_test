@@ -75,8 +75,6 @@ void main() {
         onClose: () => closed++,
         onMinimize: () {},
         onToggleMaximize: () {},
-        onActivate: () {},
-        onMove: () {},
         onResize: (WindowEdge edge) {},
       );
       await tester.pumpWidget(

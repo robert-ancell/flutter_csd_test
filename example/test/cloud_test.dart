@@ -82,8 +82,6 @@ void main() {
       onClose: () => closed++,
       onMinimize: () => minimized++,
       onToggleMaximize: () => maximized++,
-      onActivate: () {},
-      onMove: () {},
       onResize: (WindowEdge edge) {},
     );
 

@@ -38,7 +38,6 @@ class AquaTitleBar extends StatelessWidget {
           // events over a button never reach it.
           Positioned.fill(
             child: WindowMoveArea(
-              window: window,
               child: Center(child: AquaWindowTitle(window: window)),
             ),
           ),

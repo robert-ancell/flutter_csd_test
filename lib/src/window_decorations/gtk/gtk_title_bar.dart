@@ -53,7 +53,6 @@ class GtkTitleBar extends StatelessWidget {
           // pointer events over a button never reach it.
           Positioned.fill(
             child: WindowMoveArea(
-              window: window,
               child: Center(child: GtkWindowTitle(window: window)),
             ),
           ),

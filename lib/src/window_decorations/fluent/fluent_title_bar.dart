@@ -28,7 +28,6 @@ class FluentTitleBar extends StatelessWidget {
         children: <Widget>[
           Expanded(
             child: WindowMoveArea(
-              window: window,
               child: Align(
                 alignment: Alignment.centerLeft,
                 child: Padding(
