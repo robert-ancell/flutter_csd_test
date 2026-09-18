@@ -5,6 +5,8 @@ import 'package:flutter/services.dart';
 import "package:flutter/src/widgets/_window.dart";
 import 'package:flutter_csd_test/window_decorations.dart';
 
+import 'cloud/cloud_style.dart';
+
 /// Quits the application once the only window has gone away.
 ///
 /// Destroying a window doesn't end the process by itself, so without this the
@@ -27,7 +29,8 @@ enum WindowDecoration {
   automatic('Automatic', 'Drawn by the app, in the style of this desktop'),
   gtk('GTK', 'Drawn by the app, in the style of a GNOME desktop'),
   fluent('Fluent', 'Drawn by the app, in the style of Windows 11'),
-  aqua('Aqua', 'Drawn by the app, in the style of macOS');
+  aqua('Aqua', 'Drawn by the app, in the style of macOS'),
+  cloud('Cloud', 'Drawn by the app, in a style of its own');
 
   const WindowDecoration(this.label, this.description);
 
@@ -45,6 +48,7 @@ enum WindowDecoration {
     WindowDecoration.gtk => const GtkWindowDecorationStyle(),
     WindowDecoration.fluent => const FluentWindowDecorationStyle(),
     WindowDecoration.aqua => const AquaWindowDecorationStyle(),
+    WindowDecoration.cloud => const CloudWindowDecorationStyle(),
   };
 }
 
