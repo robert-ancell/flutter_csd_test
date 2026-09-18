@@ -103,20 +103,20 @@ class GtkWindowControls extends StatelessWidget {
       children: <Widget>[
         GtkWindowControlButton(
           icon: Icons.remove,
-          tooltip: 'Minimize',
+          semanticLabel: 'Minimize',
           isActivated: window.isActivated,
           onPressed: window.onMinimize,
         ),
         GtkWindowControlButton(
           icon: window.isMaximized ? Icons.filter_none : Icons.crop_square,
           iconSize: window.isMaximized ? 12 : 14,
-          tooltip: window.isMaximized ? 'Restore' : 'Maximize',
+          semanticLabel: window.isMaximized ? 'Restore' : 'Maximize',
           isActivated: window.isActivated,
           onPressed: window.onToggleMaximize,
         ),
         GtkWindowControlButton(
           icon: Icons.close,
-          tooltip: 'Close',
+          semanticLabel: 'Close',
           isActivated: window.isActivated,
           onPressed: window.onClose,
         ),

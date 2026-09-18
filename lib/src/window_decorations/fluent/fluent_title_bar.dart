@@ -77,19 +77,19 @@ class FluentWindowControls extends StatelessWidget {
       children: <Widget>[
         FluentWindowControlButton(
           icon: Icons.minimize,
-          tooltip: 'Minimize',
+          semanticLabel: 'Minimize',
           isActivated: window.isActivated,
           onPressed: window.onMinimize,
         ),
         FluentWindowControlButton(
           icon: window.isMaximized ? Icons.filter_none : Icons.crop_square,
-          tooltip: window.isMaximized ? 'Restore' : 'Maximize',
+          semanticLabel: window.isMaximized ? 'Restore' : 'Maximize',
           isActivated: window.isActivated,
           onPressed: window.onToggleMaximize,
         ),
         FluentWindowControlButton(
           icon: Icons.close,
-          tooltip: 'Close',
+          semanticLabel: 'Close',
           isActivated: window.isActivated,
           isClose: true,
           onPressed: window.onClose,

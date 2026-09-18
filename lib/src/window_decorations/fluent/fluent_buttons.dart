@@ -7,7 +7,7 @@ import 'package:flutter/widgets.dart';
 /// desktops use, and the close button turns red rather than just darker.
 class FluentWindowControlButton extends StatefulWidget {
   final IconData icon;
-  final String tooltip;
+  final String semanticLabel;
   final bool isActivated;
 
   /// Whether this is the close button, which is highlighted in red.
@@ -18,7 +18,7 @@ class FluentWindowControlButton extends StatefulWidget {
   const FluentWindowControlButton({
     super.key,
     required this.icon,
-    required this.tooltip,
+    required this.semanticLabel,
     required this.isActivated,
     required this.onPressed,
     this.isClose = false,
@@ -62,7 +62,7 @@ class _FluentWindowControlButtonState extends State<FluentWindowControlButton> {
   @override
   Widget build(BuildContext context) {
     return Semantics(
-      label: widget.tooltip,
+      label: widget.semanticLabel,
       button: true,
       child: MouseRegion(
         onEnter: (PointerEnterEvent event) {

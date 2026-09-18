@@ -5,14 +5,14 @@ import 'package:flutter/widgets.dart';
 class GtkWindowControlButton extends StatefulWidget {
   final IconData icon;
   final double iconSize;
-  final String tooltip;
+  final String semanticLabel;
   final bool isActivated;
   final VoidCallback onPressed;
 
   const GtkWindowControlButton({
     super.key,
     required this.icon,
-    required this.tooltip,
+    required this.semanticLabel,
     required this.isActivated,
     required this.onPressed,
     this.iconSize = 14,
@@ -62,7 +62,7 @@ class _GtkWindowControlButtonState extends State<GtkWindowControlButton> {
   @override
   Widget build(BuildContext context) {
     return Semantics(
-      label: widget.tooltip,
+      label: widget.semanticLabel,
       button: true,
       child: MouseRegion(
         cursor: SystemMouseCursors.click,

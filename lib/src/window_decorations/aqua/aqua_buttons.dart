@@ -9,7 +9,7 @@ import 'package:flutter/widgets.dart';
 /// both from outside.
 class AquaWindowControlButton extends StatefulWidget {
   final IconData icon;
-  final String tooltip;
+  final String semanticLabel;
   final Color color;
 
   /// The colour of the glyph, which is a dark shade of [color].
@@ -22,7 +22,7 @@ class AquaWindowControlButton extends StatefulWidget {
   const AquaWindowControlButton({
     super.key,
     required this.icon,
-    required this.tooltip,
+    required this.semanticLabel,
     required this.color,
     required this.glyphColor,
     required this.isActivated,
@@ -49,7 +49,7 @@ class _AquaWindowControlButtonState extends State<AquaWindowControlButton> {
     }
 
     return Semantics(
-      label: widget.tooltip,
+      label: widget.semanticLabel,
       button: true,
       child: GestureDetector(
         onTapDown: (TapDownDetails details) {
@@ -121,7 +121,7 @@ class _AquaWindowControlsState extends State<AquaWindowControls> {
         children: <Widget>[
           AquaWindowControlButton(
             icon: Icons.close,
-            tooltip: 'Close',
+            semanticLabel: 'Close',
             color: const Color(0xFFFF5F57),
             glyphColor: const Color(0xFF4D0000),
             isActivated: widget.isActivated,
@@ -130,7 +130,7 @@ class _AquaWindowControlsState extends State<AquaWindowControls> {
           ),
           AquaWindowControlButton(
             icon: Icons.remove,
-            tooltip: 'Minimize',
+            semanticLabel: 'Minimize',
             color: const Color(0xFFFEBC2E),
             glyphColor: const Color(0xFF995700),
             isActivated: widget.isActivated,
@@ -141,7 +141,7 @@ class _AquaWindowControlsState extends State<AquaWindowControls> {
             icon: widget.isMaximized
                 ? Icons.close_fullscreen
                 : Icons.open_in_full,
-            tooltip: widget.isMaximized ? 'Restore' : 'Zoom',
+            semanticLabel: widget.isMaximized ? 'Restore' : 'Zoom',
             color: const Color(0xFF28C840),
             glyphColor: const Color(0xFF006500),
             isActivated: widget.isActivated,
