@@ -38,27 +38,17 @@ class WindowDecorationDetails {
   final bool isActivated;
   final bool isMaximized;
 
-  /// Whether the window can be resized by dragging its edges. Maximized
-  /// windows are held against the screen edges, so they cannot.
-  final bool canResize;
-
   final VoidCallback onClose;
   final VoidCallback onMinimize;
   final VoidCallback onToggleMaximize;
-
-  /// Hands the press being handled to the window system, which drags one edge
-  /// or corner of the window with it until the pointer is released.
-  final void Function(WindowEdge edge) onResize;
 
   const WindowDecorationDetails({
     required this.title,
     required this.isActivated,
     required this.isMaximized,
-    required this.canResize,
     required this.onClose,
     required this.onMinimize,
     required this.onToggleMaximize,
-    required this.onResize,
   });
 }
 

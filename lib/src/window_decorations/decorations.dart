@@ -88,11 +88,9 @@ class _WindowDecorationsState extends State<WindowDecorations> {
       title: WindowScope.titleOf(context),
       isActivated: WindowScope.isActivatedOf(context),
       isMaximized: isMaximized,
-      canResize: !isMaximized,
       onClose: controller.destroy,
       onMinimize: () => controller.setMinimized(true),
       onToggleMaximize: () => controller.setMaximized(!controller.isMaximized),
-      onResize: platform.beginResize,
     );
 
     Widget decorated = Column(
@@ -129,12 +127,12 @@ class _WindowDecorationsState extends State<WindowDecorations> {
         borderRadius: style.cornerRadius(isMaximized: isMaximized),
         child: decorated,
       );
-      if (window.canResize) {
+      if (!isMaximized) {
         decorated = WindowResizeHandles(
           shadowExtents: style.shadowExtents,
           resizeBorder: style.resizeBorder,
           cornerRadius: style.cornerRadius(isMaximized: isMaximized),
-          onResize: window.onResize,
+          onResize: platform.beginResize,
           child: style.buildShadow(context, window, decorated),
         );
       }

@@ -71,11 +71,9 @@ void main() {
         title: 'A Window',
         isActivated: true,
         isMaximized: false,
-        canResize: true,
         onClose: () => closed++,
         onMinimize: () {},
         onToggleMaximize: () {},
-        onResize: (WindowEdge edge) {},
       );
       await tester.pumpWidget(
         Directionality(

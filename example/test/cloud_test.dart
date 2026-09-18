@@ -78,11 +78,9 @@ void main() {
       title: 'A Window',
       isActivated: true,
       isMaximized: false,
-      canResize: true,
       onClose: () => closed++,
       onMinimize: () => minimized++,
       onToggleMaximize: () => maximized++,
-      onResize: (WindowEdge edge) {},
     );
 
     await tester.pumpWidget(
